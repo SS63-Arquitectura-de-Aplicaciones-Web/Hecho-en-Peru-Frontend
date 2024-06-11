@@ -10,34 +10,6 @@ import { ProductRequest } from './models/product-request';
 export class ProductsService {
   constructor(private httpClient: HttpClient) {}
 
-  getProducts() {
-    return this.httpClient.get<Product[]>(`${environment.apiURL}products`);
-  }
-
-  getProductsByPageAdmin(offset: number, limit: number) {
-    return this.httpClient.get<Product[]>(`${environment.apiURL}productsByPageModeAdmin?offset=${offset}&limit=${limit}`);
-  }
-
-  getProductsByPageUser(offSet: number, limit: number) {
-    return this.httpClient.get<Product[]>(`${environment.apiURL}productsByPageModeUser?offset=${offSet}&limit=${limit}`);
-  }
-
-  getBestSellingProductsUser() {
-    return this.httpClient.get<Product[]>(`${environment.apiURL}listBestSellingProducts`);
-  }
-
-  getBestSellingProductsByPageUser(offSet: number, limit: number) {
-    return this.httpClient.get<Product[]>(`${environment.apiURL}bestSellingProductsByPage?offset=${offSet}&limit=${limit}`);
-  }
-
-  getProductDetailsByID(id: string) {
-    return this.httpClient.get<Product[]>(`${environment.apiURL}productDetails/${id}`);
-  }
-
-  getSearchProductDetailsByID(id: string) {
-    return this.httpClient.get<Product>(`${environment.apiURL}productDetails/${id}`);
-  }
-
   addProducts(data: ProductRequest, file: File) {
     const formData = new FormData();
     formData.append('productDTO', new Blob([JSON.stringify(data)], { type: 'application/json' }));
@@ -77,6 +49,34 @@ export class ProductsService {
           return of([]);
         })
       );
+  }
+
+  getProducts() {
+    return this.httpClient.get<Product[]>(`${environment.apiURL}products`);
+  }
+
+  getProductsByPageAdmin(offset: number, limit: number) {
+    return this.httpClient.get<Product[]>(`${environment.apiURL}productsByPageModeAdmin?offset=${offset}&limit=${limit}`);
+  }
+
+  getProductsByPageUser(offSet: number, limit: number) {
+    return this.httpClient.get<Product[]>(`${environment.apiURL}productsByPageModeUser?offset=${offSet}&limit=${limit}`);
+  }
+
+  getBestSellingProductsUser() {
+    return this.httpClient.get<Product[]>(`${environment.apiURL}listBestSellingProducts`);
+  }
+
+  getBestSellingProductsByPageUser(offSet: number, limit: number) {
+    return this.httpClient.get<Product[]>(`${environment.apiURL}bestSellingProductsByPage?offset=${offSet}&limit=${limit}`);
+  }
+
+  getProductDetailsByID(id: string) {
+    return this.httpClient.get<Product[]>(`${environment.apiURL}productDetails/${id}`);
+  }
+
+  getSearchProductDetailsByID(id: string) {
+    return this.httpClient.get<Product>(`${environment.apiURL}productDetails/${id}`);
   }
 
   getCategories() {
