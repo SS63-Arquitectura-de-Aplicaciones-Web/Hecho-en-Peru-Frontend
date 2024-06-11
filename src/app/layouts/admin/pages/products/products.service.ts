@@ -65,7 +65,7 @@ export class ProductsService {
           console.error('Failed to update product', err);
           return of({ err });
         })
-      );
+    );
   }
 
   deleteProductsByID(id: string) {
