@@ -1,0 +1,82 @@
+<section>
+  <div class="img-container">
+    <figure>
+      <img src="../../../../../../../assets/img/llama-profile.jpg" alt="llamita" />
+    </figure>
+  </div>
+
+  <div class="form-container">
+    <h1>Editar perfil</h1>
+    <form [formGroup]="editProfileForm">
+      <mat-form-field class="field" appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input
+          formControlName="name"
+          matInput
+          placeholder="Ingresa tu nombre"
+          value=""
+        />
+      </mat-form-field>
+      <mat-form-field class="field" appearance="outline">
+        <mat-label>Apellido</mat-label>
+        <input
+          formControlName="lastName"
+          matInput
+          placeholder="Ingresa tus apellidos"
+          value=""
+        />
+      </mat-form-field>
+      <mat-form-field class="field" appearance="outline">
+        <mat-label>Correo electrónico</mat-label>
+        <input
+          formControlName="email"
+          matInput
+          placeholder="Ingresa tu correo electrónico"
+          value=""
+        />
+      </mat-form-field>
+
+      <mat-form-field class="field" appearance="outline">
+        <mat-label>Contraseña nueva</mat-label>
+        <input
+          formControlName="newPassword"
+          matInput
+          [type]="revealPassword ? 'text' : 'password'"
+          (keyup)="onChangePasswordInput($event)"
+        />
+        <button
+          (click)="revealPassword = !revealPassword"
+          matSuffix
+          mat-icon-button
+          type="button"
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field class="field" appearance="outline" *ngIf="changePassword">
+        <mat-label>Contraseña actual</mat-label>
+        <input
+          formControlName="password"
+          matInput
+          [type]="revealPassword ? 'text' : 'password'"
+        />
+        <button
+          (click)="revealPassword = !revealPassword"
+          matSuffix
+          mat-icon-button
+          type="button"
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
+      </mat-form-field>
+      <button class="btn-submit" (click)="onSubmit()" mat-flat-button type="submit">
+        Guardar cambios
+      </button>
+    </form>
+    <button class="btn-delete" (click)="onDelete()" mat-flat-button type="button">
+      Eliminar cuenta
+    </button>
+  </div>
+</section>
+
