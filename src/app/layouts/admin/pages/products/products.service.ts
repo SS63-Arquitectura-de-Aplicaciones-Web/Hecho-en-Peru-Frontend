@@ -7,4 +7,8 @@ export class ProductsService {
       .post<Category>(`${environment.apiURL}category`, data)
       .pipe(mergeMap(() => this.getCategories()));
   }
+
+  getCategories() {
+    return this.httpClient.get<Category[]>(`${environment.apiURL}categories`);
+  }
 }
