@@ -1,0 +1,64 @@
+<div
+  class="div-add-container grid formgrid flex justify-content-center align-items-top"
+>
+  <div class="col-2">
+    <button
+      (click)="onCreateProduct()"
+      mat-flat-button
+      class="w-full btn-add-product"
+    >
+      <mat-icon>add</mat-icon> Añadir producto
+    </button>
+  </div>
+  <div class="col-2">
+    <button
+      (click)="onCreateCategory()"
+      mat-flat-button
+      class="w-full btn-add-category"
+    >
+      <mat-icon>add</mat-icon> Añadir categoría
+    </button>
+  </div>
+  <div class="col-4 centered-header">
+    <span>PRODUCTOS</span>
+  </div>
+  <div class="col-4 search-bar">
+    <form
+      [formGroup]="productSearchForm"
+      class="product-form-search"
+    >
+      <mat-form-field class="field">
+        <input formControlName="id" matInput placeholder="Ingrese el ID" />
+      </mat-form-field>
+      <button
+        mat-flat-button
+        type="button"
+        class="btn-search-icon"
+        (click)="onSearch()"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <button
+        mat-flat-button
+        type="button"
+        class="btn-clean-icon"
+        (click)="onClean()"
+      >
+        <i class="fa-solid fa-x"></i>
+      </button>
+    </form>
+  </div>
+  <app-product-table
+    class="w-full"
+    [dataSource]="dataSource"
+    (editProduct)="onEditProduct($event)"
+    (deleteProduct)="onDeleteProduct($event)"
+  ></app-product-table>
+</div>
+<div class="no-results-container" *ngIf="!products.length || searchAttempted">
+  <i class="fa-solid fa-face-sad-cry fa-3x"></i>
+  <div>
+    <p>No se encontraron resultados</p>
+    <p>para su búsqueda</p>
+  </div>
+</div>
