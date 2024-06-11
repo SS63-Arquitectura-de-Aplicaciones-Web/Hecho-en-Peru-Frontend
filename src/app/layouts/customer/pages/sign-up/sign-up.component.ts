@@ -20,7 +20,7 @@ export class SignUpComponent {
     private fb: FormBuilder,
     private customersService: CustomersService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
   ) {
     this.signUpForm = this.fb.group({
       name: this.fb.control('', [
