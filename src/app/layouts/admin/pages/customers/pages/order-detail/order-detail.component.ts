@@ -64,7 +64,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     const customerId = this.activatedRoute.snapshot.paramMap.get('id');
     if (customerId) {
       const customerSubscription = this.customersService
-        .getSearchCustomerByID(customerId)
+        .getSearchCustomerById(customerId)
         .subscribe({
           next: (customer) => {
             this.customerSelected = customer;
@@ -91,7 +91,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
   loadOrders(customerId: string) {
     const countSubscription = this.customersService
-      .getAllOrderDetailsByUserIDAdmin(customerId)
+      .getAllOrderDetailsByUserIdAdmin(customerId)
       .subscribe({
         next: (orders) => {
           this.length = orders.length;
@@ -132,6 +132,40 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
     this.loadOrdersByPage();
+  }
+
+  onSearch(): void {
+    if (this.orderSearchForm.invalid) {
+      this.orderSearchForm.markAllAsTouched();
+      return;
+    }
+    const orderId = this.orderSearchForm.value.id;
+    const customerId = this.activatedRoute.snapshot.paramMap.get('id');
+    if (customerId && orderId) {
+      const searchSubscription = this.customersService
+        .getSearchOrderDetailsById(orderId, customerId)
+        .subscribe({
+          next: (order) => {
+            this.dataSourceOrder.data = order;
+            this.length = order.length;
+            this.searchAttempted = false;
+          },
+          error: (err) => {
+            console.error(`Failed to load order with ID ${orderId}`, err);
+            this.dataSourceOrder.data = [];
+            this.length = 0;
+            this.searchAttempted = true;
+          },
+        });
+      this.subscriptions.push(searchSubscription);
+    }
+  }
+
+  onClean(): void {
+    this.orderSearchForm.reset();
+    this.pageIndex = 0;
+    this.loadOrdersByPage();
+    this.searchAttempted = false;
   }
 
   redirectToCustomers(): void {

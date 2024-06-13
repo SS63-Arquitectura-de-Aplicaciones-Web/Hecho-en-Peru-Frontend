@@ -14,14 +14,6 @@ export class CustomersService {
     private authService: AuthService
   ) {}
 
-  getCustomers() {
-    return this.httpClient.get<Customer[]>(`${environment.apiURL}users`);
-  }
-
-  getSearchCustomerByID(id: string) {
-    return this.httpClient.get<Customer>(`${environment.apiURL}user/${id}`);
-  }
-
   getOrders() {
     return this.httpClient.get<Customer[]>(`${environment.apiURL}orders`);
   }
@@ -30,8 +22,12 @@ export class CustomersService {
     return this.httpClient.get<OrderDetail[]>(`${environment.apiURL}orderDetailByUserId?userId=${customerId}&offset=${offset}&limit=${limit}`);
   }
 
-  getAllOrderDetailsByUserIDAdmin(customerId: string) {
+  getAllOrderDetailsByUserIdAdmin(customerId: string) {
     return this.httpClient.get<OrderDetail[]>(`${environment.apiURL}allOrderDetailsByUserId?userId=${customerId}`);
+  }
+
+  getSearchOrderDetailsById(orderId: string, userId: string) {
+    return this.httpClient.get<OrderDetail[]>(`${environment.apiURL}ordersDetails?orderId=${orderId}&userId=${userId}`);
   }
 
   createUser(userData: Customer) {
