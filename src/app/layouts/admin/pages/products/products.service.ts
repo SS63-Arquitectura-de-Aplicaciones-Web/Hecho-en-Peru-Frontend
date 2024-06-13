@@ -34,6 +34,10 @@ export class ProductsService {
     return this.httpClient.get<Product>(`${environment.apiURL}productDetails/${id}`);
   }
 
+  getSearchProductDetailsByID(id: string) {
+    return this.httpClient.get<Product>(`${environment.apiURL}productDetails/${id}`);
+  }
+
   addProducts(data: ProductRequest, file: File) {
     const formData = new FormData();
     formData.append('productDTO', new Blob([JSON.stringify(data)], { type: 'application/json' }));
