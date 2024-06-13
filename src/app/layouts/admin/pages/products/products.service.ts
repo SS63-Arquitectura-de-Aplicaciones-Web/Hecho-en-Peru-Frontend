@@ -18,6 +18,22 @@ export class ProductsService {
     return this.httpClient.get<Product[]>(`${environment.apiURL}productsByPageModeAdmin?offset=${offset}&limit=${limit}`);
   }
 
+  getProductsByPageUser(offSet: number, limit: number) {
+    return this.httpClient.get<Product[]>(`${environment.apiURL}productsByPageModeUser?offset=${offSet}&limit=${limit}`);
+  }
+
+  getBestSellingProductsUser() {
+    return this.httpClient.get<Product[]>(`${environment.apiURL}listBestSellingProducts`);
+  }
+
+  getBestSellingProductsByPageUser(offSet: number, limit: number) {
+    return this.httpClient.get<Product[]>(`${environment.apiURL}bestSellingProductsByPage?offset=${offSet}&limit=${limit}`);
+  }
+
+  getProductDetailsByID(id: string) {
+    return this.httpClient.get<Product>(`${environment.apiURL}productDetails/${id}`);
+  }
+
   addProducts(data: ProductRequest, file: File) {
     const formData = new FormData();
     formData.append('productDTO', new Blob([JSON.stringify(data)], { type: 'application/json' }));
@@ -45,7 +61,7 @@ export class ProductsService {
           console.error('Failed to update product', err);
           return of({ err });
         })
-    );
+      );
   }
 
   deleteProductsByID(id: string) {
@@ -57,26 +73,6 @@ export class ProductsService {
           return of([]);
         })
       );
-  }
-
-  getProductsByPageUser(offSet: number, limit: number) {
-    return this.httpClient.get<Product[]>(`${environment.apiURL}productsByPageModeUser?offset=${offSet}&limit=${limit}`);
-  }
-
-  getBestSellingProductsUser() {
-    return this.httpClient.get<Product[]>(`${environment.apiURL}listBestSellingProducts`);
-  }
-
-  getBestSellingProductsByPageUser(offSet: number, limit: number) {
-    return this.httpClient.get<Product[]>(`${environment.apiURL}bestSellingProductsByPage?offset=${offSet}&limit=${limit}`);
-  }
-
-  getProductDetailsByID(id: string) {
-    return this.httpClient.get<Product[]>(`${environment.apiURL}productDetails/${id}`);
-  }
-
-  getSearchProductDetailsByID(id: string) {
-    return this.httpClient.get<Product>(`${environment.apiURL}productDetails/${id}`);
   }
 
   getCategories() {
