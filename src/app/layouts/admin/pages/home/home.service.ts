@@ -35,4 +35,13 @@ export class HomeService {
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 
+  getProductsQuantityByRegion(): Observable<QuantityProductsByRegion[]> {
+    this.loadingService.setIsLoading(true);
+    return this.httpClient
+      .get<QuantityProductsByRegion[]>(
+        `${environment.apiURL}productsQuantityByRegion`
+      )
+      .pipe(finalize(() => this.loadingService.setIsLoading(false)));
+  }
+  
 }
