@@ -28,6 +28,14 @@ export class RegionsService {
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 
+  getSearchRegionByName(name: string) {
+    this.loadingService.setIsLoading(true);
+
+    return this.httpClient
+      .get<Region[]>(`${environment.apiURL}regionSearch/${name}`)
+      .pipe(finalize(() => this.loadingService.setIsLoading(false)));
+  }
+
   getSearchRegionDetailsByID(id: string) {
     this.loadingService.setIsLoading(true);
 
