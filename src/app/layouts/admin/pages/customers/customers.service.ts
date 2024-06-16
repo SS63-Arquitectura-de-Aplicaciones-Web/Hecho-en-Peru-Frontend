@@ -5,42 +5,50 @@ import { environment } from '../../../../../environments/environment';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../customer/pages/auth/auth.service';
 import { UserProfile } from '../../../customer/pages/user/pages/profile/models/user-profile';
-import { OrderDetail } from './pages/order-detail/models/order-detail';
+import { LoadingService } from '../../../../core/services/loading.service';
 
 @Injectable()
 export class CustomersService {
   constructor(
     private httpClient: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private loadingService: LoadingService
   ) {}
 
-  getOrders() {
-    return this.httpClient.get<Customer[]>(`${environment.apiURL}orders`);
-  }
+  getSearchCustomerById(id: string) {
+    this.loadingService.setIsLoading(true);
 
-  getOrderDetailByUserIdByPageAdmin(customerId: string, offset: number, limit: number) {
-    return this.httpClient.get<OrderDetail[]>(`${environment.apiURL}orderDetailByUserId?userId=${customerId}&offset=${offset}&limit=${limit}`);
-  }
-
-  getAllOrderDetailsByUserIdAdmin(customerId: string) {
-    return this.httpClient.get<OrderDetail[]>(`${environment.apiURL}allOrderDetailsByUserId?userId=${customerId}`);
-  }
-
-  getSearchOrderDetailsById(orderId: string, userId: string) {
-    return this.httpClient.get<OrderDetail[]>(`${environment.apiURL}ordersDetails?orderId=${orderId}&userId=${userId}`);
+    return this.httpClient
+      .get<Customer>(`${environment.apiURL}user/${id}`)
+      .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 
   createUser(userData: Customer) {
-    return this.httpClient.post<Customer>(`${environment.apiURL}auth/register`, { ...userData });
+    this.loadingService.setIsLoading(true);
+
+    return this.httpClient
+      .post<Customer>(`${environment.apiURL}auth/register`, { ...userData })
+      .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 
   updateUser(userProfile: UserProfile, id: string) {
-    return this.httpClient.put<Customer>(`${environment.apiURL}userUpdate/${id}`, userProfile);
+    this.loadingService.setIsLoading(true);
+
+    return this.httpClient
+      .put<Customer>(`${environment.apiURL}userUpdate/${id}`, userProfile)
+      .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 
   deleteUser(id: string) {
+    this.loadingService.setIsLoading(true);
+
     return this.httpClient
       .delete(`${environment.apiURL}user/${id}`, { responseType: 'text' })
-      .pipe(finalize(() => this.authService.logOut()));
+      .pipe(
+        finalize(() => {
+          this.loadingService.setIsLoading(false);
+          this.authService.logOut();
+        })
+      );
   }
 }
