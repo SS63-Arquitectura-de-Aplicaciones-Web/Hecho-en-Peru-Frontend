@@ -1,0 +1,59 @@
+<div
+  class="div-add-container grid formgrid flex justify-content-center align-items-top"
+>
+  <div class="col-2">
+    <button
+      (click)="onCreateRegion()"
+      mat-flat-button
+      class="w-full btn-add-region"
+    >
+      <mat-icon>add</mat-icon> Añadir región
+    </button>
+  </div>
+  <div class="col-2"></div>
+  <div class="col-4 centered-header">
+    <span>REGIONES</span>
+  </div>
+  <div class="col-4 search-bar">
+    <form
+      [formGroup]="regionSearchForm"
+      class="region-form-search"
+    >
+      <mat-form-field class="field">
+        <input
+          formControlName="name"
+          matInput
+          placeholder="Ingrese el nombre"
+        />
+      </mat-form-field>
+      <button
+        mat-flat-button
+        type="submit"
+        class="btn-search-icon"
+        (click)="onSearch()"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <button
+        mat-flat-button
+        type="button"
+        class="btn-clean-icon"
+        (click)="onClean()"
+      >
+        <i class="fa-solid fa-x"></i>
+      </button>
+    </form>
+  </div>
+  <app-region-table
+    class="w-full"
+    [dataSource]="dataSource"
+    (editRegion)="onEditRegion($event)"
+  ></app-region-table>
+</div>
+<div class="no-results-container" *ngIf="searchAttempted">
+  <i class="fa-solid fa-face-sad-cry fa-3x"></i>
+  <div>
+    <p>No se encontraron resultados</p>
+    <p> para su búsqueda</p>
+  </div>
+</div>

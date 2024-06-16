@@ -1,0 +1,48 @@
+.shadow-table {
+  box-shadow: 0.01rem 0.01rem 0.01rem rgba(199, 197, 197, 0.062);
+}
+
+table {
+  table-layout: fixed;
+}
+
+th {
+  text-align: center;
+}
+
+td {
+  text-align: justify;
+  padding: 1rem;
+  position: relative;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.w-size-id {
+  width: 3.5rem;
+}
+
+.width-size {
+  width: 29rem;
+}
+
+.overflow-div {
+  height: 3.5rem;
+  white-space: wrap;
+  overflow: hidden;
+  display: flex;
+}
+
+.dots {
+  position: absolute;
+  bottom: 2rem;
+  right: 1rem;
+  padding-left: 1rem;
+  background-color: #fff;
+}
+
+.paginator-border {
+  border-top: rgba(242, 242, 242, 0.052) 0.001rem solid;
+}
