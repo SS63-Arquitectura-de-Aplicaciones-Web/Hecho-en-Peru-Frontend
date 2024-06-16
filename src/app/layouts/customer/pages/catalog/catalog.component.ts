@@ -201,5 +201,43 @@ export class CatalogComponent {
   ngOnDestroy(): void {
     this.subscriptions.forEach((suscription) => suscription.unsubscribe());
   }
+
+  onFilterProducts() {
+
+    this.filterActive = true;
+
+    let temp = [];
+    let selectedOrder = this.filterForm.get('order')?.value;
+
+    switch (selectedOrder) {
+
+      case 'PASC': {
+        temp.sort((a, b) => a.price - b.price);
+        break;
+      }
+
+    }
+    this.filterProducts = temp;
+    this.length = this.filterProducts.length;
+
+    this.showProductsByPage();
+  }
+
+  cleanFilters() {
+    this.filterActive = false;
+    this.filterProducts = this.products;
+    this.length = this.products.length;
+    this.pageIndex = 0;
+    this.inputPageNumber = this.pageIndex + 1;
+
+    this.filterForm.reset({
+      price: {
+        min: 10,
+        max: 1500,
+      },
+    });
+    this.showProductsByPage();
+  }
+
 }
 
