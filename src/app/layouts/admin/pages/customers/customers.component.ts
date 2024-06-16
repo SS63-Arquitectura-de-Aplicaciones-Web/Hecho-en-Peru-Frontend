@@ -63,4 +63,31 @@ export class CustomersComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.push(subscription);
   }
+
+  onSearch(): void {
+    if (this.customerSearchForm.invalid) {
+      this.customerSearchForm.markAllAsTouched();
+    } else {
+      const subscription = this.customersService
+        .getSearchCustomerById(this.customerSearchForm.value.id)
+        .subscribe({
+          next: (customer) => {
+            this.searchAttempted = false;
+              this.customers = [customer];
+              this.dataSource.data = this.customers;
+          },
+          error: () => {
+            this.dataSource.data = [];
+            this.searchAttempted = true;
+          }
+        });
+      this.subscriptions.push(subscription);
+    }
+  }
+
+  onClean(): void {
+    this.searchAttempted = false;
+    this.customerSearchFormDir.resetForm();
+    this.loadCustomers();
+  }
 }

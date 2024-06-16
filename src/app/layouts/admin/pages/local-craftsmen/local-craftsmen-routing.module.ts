@@ -7,6 +7,10 @@ const routes: Routes = [
     path: '',
     component: LocalCraftsmenComponent,
   },
+  {
+    path: ':id',
+    component: LocalCraftsmanDetailsComponent,
+  }
 ];
 
 @NgModule({
