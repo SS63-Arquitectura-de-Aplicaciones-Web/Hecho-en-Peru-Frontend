@@ -26,4 +26,13 @@ export class HomeService {
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 
+  getProductsQuantityByCategory(): Observable<QuantityProductsByCategory[]> {
+    this.loadingService.setIsLoading(true);
+    return this.httpClient
+      .get<QuantityProductsByCategory[]>(
+        `${environment.apiURL}productsQuantityByCategory`
+      )
+      .pipe(finalize(() => this.loadingService.setIsLoading(false)));
+  }
+
 }
