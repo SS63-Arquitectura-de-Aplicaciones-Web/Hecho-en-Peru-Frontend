@@ -51,4 +51,24 @@ export class RegionsService {
       .get<Region>(`${environment.apiURL}regionDetail/${id}`)
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
+
+  addRegions(data: Region, file: File) {
+    this.loadingService.setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append(
+      'regionDTO',
+      new Blob([JSON.stringify(data)], { type: 'application/json' })
+    );
+    if (file) {
+      formData.append('file', file, file.name);
+    }
+    return this.httpClient.post(`${environment.apiURL}region`, formData).pipe(
+      catchError((err) => {
+        console.error('Failed to add region', err);
+        return of({ err });
+      }),
+      finalize(() => this.loadingService.setIsLoading(false))
+    );
+  }
 }
