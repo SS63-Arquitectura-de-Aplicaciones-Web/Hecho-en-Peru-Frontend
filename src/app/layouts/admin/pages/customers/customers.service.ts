@@ -39,6 +39,7 @@ export class CustomersService {
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 
+  
   deleteUser(id: string) {
     this.loadingService.setIsLoading(true);
 
