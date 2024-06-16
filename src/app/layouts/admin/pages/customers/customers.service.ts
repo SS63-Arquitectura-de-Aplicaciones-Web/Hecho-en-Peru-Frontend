@@ -23,6 +23,14 @@ export class CustomersService {
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 
+  getSearchCustomerById(id: string) {
+    this.loadingService.setIsLoading(true);
+
+    return this.httpClient
+      .get<Customer>(`${environment.apiURL}user/${id}`)
+      .pipe(finalize(() => this.loadingService.setIsLoading(false)));
+  }
+
   createUser(userData: Customer) {
     this.loadingService.setIsLoading(true);
 
@@ -39,7 +47,6 @@ export class CustomersService {
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 
-  
   deleteUser(id: string) {
     this.loadingService.setIsLoading(true);
 
