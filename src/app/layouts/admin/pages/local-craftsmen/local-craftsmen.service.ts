@@ -52,4 +52,20 @@ export class LocalCraftsmenService {
         finalize(() => this.loadingService.setIsLoading(false))
       );
   }
+
+  deleteLocalCraftsmenByID(id: string) {
+    this.loadingService.setIsLoading(true);
+
+    return this.httpClient
+      .delete(`${environment.apiURL}localCraftsmanDelete/${id}`, {
+        responseType: 'text',
+      })
+      .pipe(
+        catchError((err) => {
+          console.error('Failed to delete local craftsman', err);
+          return of([]);
+        }),
+        finalize(() => this.loadingService.setIsLoading(false))
+      );
+  }
 }
