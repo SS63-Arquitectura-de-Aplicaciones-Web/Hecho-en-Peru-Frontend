@@ -42,5 +42,6 @@ export class HomeService {
         `${environment.apiURL}productsQuantityByRegion`
       )
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
-  }
+  } 
+  
 }
