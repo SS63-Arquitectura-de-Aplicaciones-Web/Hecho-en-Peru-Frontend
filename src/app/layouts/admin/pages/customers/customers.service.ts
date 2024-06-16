@@ -15,11 +15,11 @@ export class CustomersService {
     private loadingService: LoadingService
   ) {}
 
-  getSearchCustomerById(id: string) {
+  getCustomers() {
     this.loadingService.setIsLoading(true);
 
     return this.httpClient
-      .get<Customer>(`${environment.apiURL}user/${id}`)
+      .get<Customer[]>(`${environment.apiURL}users`)
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 

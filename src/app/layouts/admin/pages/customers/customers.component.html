@@ -1,0 +1,40 @@
+<div
+  class="div-add-container grid formgrid flex justify-content-center align-items-top"
+>
+  <div class="col-4"></div>
+  <div class="col-4 centered-header">
+    <span>CLIENTES</span>
+  </div>
+  <div class="col-4 search-bar">
+    <form
+      [formGroup]="customerSearchForm"
+      class="customer-form-search"
+    >
+      <mat-form-field class="field">
+        <input
+          formControlName="id"
+          matInput
+          placeholder="Ingrese el ID"
+        />
+      </mat-form-field>
+      <button
+        mat-flat-button
+        type="submit"
+        class="btn-search-icon"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <button
+        mat-flat-button
+        type="button"
+        class="btn-clean-icon"
+      >
+        <i class="fa-solid fa-x"></i>
+      </button>
+    </form>
+  </div>
+  <app-customer-table
+    class="w-full"
+    [dataSource]="dataSource"
+  ></app-customer-table>
+</div>
