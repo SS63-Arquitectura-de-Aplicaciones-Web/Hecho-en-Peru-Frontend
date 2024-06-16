@@ -21,6 +21,14 @@ export class LocalCraftsmenService {
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
 
+  getSearchLocalCraftsmanDetailsByID(id: string) {
+    this.loadingService.setIsLoading(true);
+
+    return this.httpClient
+      .get<LocalCraftsman>(`${environment.apiURL}localCraftsmanDetail/${id}`)
+      .pipe(finalize(() => this.loadingService.setIsLoading(false)));
+  }
+
   getlocalCraftsmenByRegion(regionId: string) {
     this.loadingService.setIsLoading(true);
 
