@@ -53,6 +53,28 @@ export class LocalCraftsmenService {
       );
   }
 
+  updateLocalCraftsmen(id: string, data: LocalCraftsmanRequest, file: File) {
+    this.loadingService.setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append(
+      'localCraftsmanDTO',
+      new Blob([JSON.stringify(data)], { type: 'application/json' })
+    );
+    if (file) {
+      formData.append('file', file, file.name);
+    }
+    return this.httpClient
+      .put(`${environment.apiURL}localCraftsman/${id}`, formData)
+      .pipe(
+        catchError((err) => {
+          console.error('Failed to update local craftsman', err);
+          return of({ err });
+        }),
+        finalize(() => this.loadingService.setIsLoading(false))
+      );
+  }
+
   deleteLocalCraftsmenByID(id: string) {
     this.loadingService.setIsLoading(true);
 
