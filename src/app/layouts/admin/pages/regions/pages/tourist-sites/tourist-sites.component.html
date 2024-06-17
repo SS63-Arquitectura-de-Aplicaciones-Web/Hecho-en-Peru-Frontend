@@ -1,0 +1,60 @@
+<div class="div-add-container grid formgrid" *ngIf="regionSelected">
+  <div class="col-1"></div>
+  <div class="col-10">
+    <span>REGIÓN {{ regionSelected.name | uppercase }}</span>
+  </div>
+  <div class="col-1">
+    <button
+      mat-button
+      (click)="redirectToRegions()"
+      class="btn-close"
+    >
+      <mat-icon>close</mat-icon> Cerrar
+    </button>
+  </div>
+  <div>
+    <div class="container-text">
+      <p>
+        <b>Historia: </b>
+        {{ regionSelected.history }}
+      </p>
+    </div>
+    <div class="container-text">
+      <p>
+        <b>Introducción de sitios turísticos: </b>
+        {{ regionSelected.sitesIntroduction }}
+      </p>
+    </div>
+    <div class="container-text">
+      <p>
+        <b>Introducción de artesanos: </b>
+        {{ regionSelected.craftsmenIntroduction }}
+      </p>
+    </div>
+  </div>
+  <div
+    class="div-table-container w-full grid formgrid flex justify-content-center col-12"
+  >
+    <div class="col-3 py-4">
+      <button
+        (click)="onCreateTouristSite()"
+        mat-flat-button
+        class="w-full btn-add-site"
+      >
+        <mat-icon>add</mat-icon> Añadir lugar turístico
+      </button>
+    </div>
+    <div class="col-1 py-4"></div>
+    <div class="col-4 centered-header py-4">
+      <span>LUGARES TURÍSTICOS</span>
+    </div>
+    <div class="col-4"></div>
+    <div class="w-full">
+      <app-tourist-site-table
+        [dataSource]="dataSource"
+        (editTouristSite)="onEditTouristSite($event)"
+        (deleteTouristSite)="onDeleteTouristSite($event)"
+      ></app-tourist-site-table>
+    </div>
+  </div>
+</div>
