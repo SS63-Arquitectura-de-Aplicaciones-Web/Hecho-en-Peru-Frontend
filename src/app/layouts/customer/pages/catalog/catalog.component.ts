@@ -207,16 +207,25 @@ export class CatalogComponent {
     this.filterActive = true;
 
     let temp = [];
+
+    //Price filter
+    let minPrice = this.filterForm.get('price')?.get('min')?.value;
+    let maxPrice = this.filterForm.get('price')?.get('max')?.value;
+
+    //OrderBy filter
     let selectedOrder = this.filterForm.get('order')?.value;
 
-    switch (selectedOrder) {
+    temp = this.products.filter(
+      (p) => p.price >= minPrice && p.price <= maxPrice
+    );
 
+    switch (selectedOrder) {
       case 'PASC': {
         temp.sort((a, b) => a.price - b.price);
         break;
       }
-
     }
+    
     this.filterProducts = temp;
     this.length = this.filterProducts.length;
 
