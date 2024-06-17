@@ -224,6 +224,10 @@ export class CatalogComponent {
         temp.sort((a, b) => a.price - b.price);
         break;
       }
+      case 'RDSC': {
+        temp.sort((a, b) => b.averageRating - a.averageRating);
+        break;
+      }
     }
     
     this.filterProducts = temp;
