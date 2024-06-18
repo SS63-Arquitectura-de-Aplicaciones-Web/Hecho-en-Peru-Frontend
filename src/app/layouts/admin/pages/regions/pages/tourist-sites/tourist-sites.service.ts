@@ -66,4 +66,17 @@ export class TouristSitesService {
       finalize(() => this.loadingService.setIsLoading(false))
     );
   }
+  
+  deleteTouristSiteByID(id: string) {
+    this.loadingService.setIsLoading(true);
+    return this.httpClient
+      .delete(`${environment.apiURL}touristSite/${id}`, { responseType: 'text' })
+      .pipe(
+        catchError((err) => {
+          console.error('Failed to delete tourist site', err);
+          return of([]);
+        }),
+        finalize(() => this.loadingService.setIsLoading(false))
+      );
+  }
 }
