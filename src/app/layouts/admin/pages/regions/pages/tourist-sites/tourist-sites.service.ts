@@ -49,5 +49,21 @@ export class TouristSitesService {
       finalize(() => this.loadingService.setIsLoading(false))
     );
   }
-
+  
+  updateTouristSites(id: string, data: TouristSite, file: File) {
+    this.loadingService.setIsLoading(true);
+    const formData: FormData = new FormData();
+    formData.append('touristSiteDTO', new Blob([JSON.stringify(data)], { type: "application/json" }));
+    if (file) {
+      formData.append('file', file, file.name);
+    }
+    return this.httpClient.put(`${environment.apiURL}touristSite/${id}`, formData)
+    .pipe(
+      catchError((err) => {
+        console.error('Failed to update tourist site', err);
+        return of({ err });
+      }),
+      finalize(() => this.loadingService.setIsLoading(false))
+    );
+  }
 }
