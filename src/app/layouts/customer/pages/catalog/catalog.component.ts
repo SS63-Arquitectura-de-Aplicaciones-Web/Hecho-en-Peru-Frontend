@@ -217,6 +217,12 @@ export class CatalogComponent {
         this.filterForm.get('categories')?.value[i] ? category.id : null
       )
       .filter((id) => id !== null);
+    //Region filter
+    const selectedRegions = this.regions
+      .map((region, i) =>
+      this.filterForm.get('regions')?.value[i] ? region.id : null
+    )
+      .filter((id) => id !== null);
 
     temp = this.products.filter(
       (p) => p.price >= minPrice && p.price <= maxPrice
@@ -224,6 +230,11 @@ export class CatalogComponent {
 
     if (selectedCategories.length)
       temp = temp.filter((p) => selectedCategories.includes(p.category.id));
+
+    if (selectedRegions.length)
+      temp = temp.filter((p) =>
+        selectedRegions.includes(p.localCraftsman.region.id)
+      );
 
     switch (selectedOrder) {
       case 'PASC': {
