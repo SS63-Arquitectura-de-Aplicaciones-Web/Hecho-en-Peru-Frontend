@@ -36,8 +36,8 @@ export class ProductDialogComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(3)]],
       category_id: ['', Validators.required],
       localCraftsman_id: ['', Validators.required],
-      price: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(1)]],
-      stock: ['', [Validators.required, Validators.pattern(/^[1-9]\d*$/), Validators.min(1)]],
+      price: ['', [Validators.required, Validators.min(1)]],
+      stock: ['', [Validators.required, Validators.min(1)]],
       history: ['', Validators.required],
       details: ['', Validators.required],
     });
@@ -62,15 +62,13 @@ export class ProductDialogComponent implements OnInit {
 
   loadCategories(): void {
     this.productService.getCategories().subscribe({
-      next: (categories) => this.categories = categories,
-      error: (err) => console.error('Failed to load categories', err)
+      next: (categories) => (this.categories = categories),
     });
   }
 
   loadLocalCraftsmen(): void {
-    this.localCraftsmanService.getLocalCraftsmen().subscribe({
-      next: (localCraftsmen) => this.localCraftsmen = localCraftsmen,
-      error: (err) => console.error('Failed to load local craftsmen', err)
+    this.localCraftsmanService.getAllLocalCraftsmen().subscribe({
+      next: (localCraftsmen) => (this.localCraftsmen = localCraftsmen),
     });
   }
 
@@ -103,17 +101,17 @@ export class ProductDialogComponent implements OnInit {
   onSave(): void {
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
-      if(!this.selectedFile) this.requiredImage = true;
+      if (!this.selectedFile) this.requiredImage = true;
     } else {
-      if (!this.editingProduct && !this.selectedFile) { 
+      if (!this.editingProduct && !this.selectedFile) {
         this.requiredImage = true;
         return;
       }
-
       this.requiredImage = false;
-      
+
       forkJoin({
-        localCraftsman: this.localCraftsmanService.getSearchLocalCraftsmanDetailsByID(
+        localCraftsman:
+          this.localCraftsmanService.getSearchLocalCraftsmanDetailsByID(
             this.productForm.get('localCraftsman_id')?.value
           ),
         category: this.productService.getCategoriesByID(
@@ -123,18 +121,19 @@ export class ProductDialogComponent implements OnInit {
         next: (results) => {
           const localCraftsman = results.localCraftsman;
           const category = results.category;
-          const productData = { ...this.productForm.value, localCraftsman, category };
+          const productData = {
+            ...this.productForm.value,
+            localCraftsman,
+            category,
+          };
           let imageToSend;
-          
+
           if (this.selectedFile) {
             imageToSend = this.selectedFile;
           } else {
             imageToSend = this.productForm.get('image')?.value || new Blob();
           }
           this.matDialogRef.close({ productData, image: imageToSend });
-        },
-        error: (err) => {
-          console.error('Error in one of the requests', err);
         },
       });
     }

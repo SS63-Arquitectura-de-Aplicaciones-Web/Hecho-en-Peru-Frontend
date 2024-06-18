@@ -1,13 +1,3 @@
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-local-craftsman-table',
-  templateUrl: './local-craftsman-table.component.html',
-  styleUrl: './local-craftsman-table.component.scss',
-})
-export class LocalCraftsmanTableComponent {
-  
-}
 import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { LocalCraftsman } from '../../models/local-craftsman';
 import { MatTableDataSource } from '@angular/material/table';

@@ -1,13 +1,3 @@
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-local-craftsmen',
-  templateUrl: './local-craftsmen.component.html',
-  styleUrl: './local-craftsmen.component.scss',
-})
-export class LocalCraftsmenComponent {
-  
-}
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { LocalCraftsman } from './models/local-craftsman';
 import { Subscription } from 'rxjs';

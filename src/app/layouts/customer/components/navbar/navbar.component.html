@@ -1,0 +1,73 @@
+<nav>
+  <div class="logo">
+    <a routerLink="home">
+      <img
+        src="../../../../../assets/img/logo-navbar.png"
+        alt="Logo de Hecho en Perú"
+      />
+    </a>
+  </div>
+
+  <mat-nav-list class="menu-list-items">
+    <div class="menu-list-item">
+      <a
+        #homeLink="routerLinkActive"
+        routerLinkActive
+        [ngClass]="homeLink.isActive ? 'active' : ''"
+        routerLink="home"
+        mat-list-item
+      >
+        <span>Inicio</span>
+      </a>
+    </div>
+    <div class="menu-list-item">
+      <a
+        #catalogLink="routerLinkActive"
+        routerLinkActive
+        [ngClass]="catalogLink.isActive ? 'active' : ''"
+        routerLink="catalog"
+        mat-list-item
+      >
+        <span>Catálogo</span>
+      </a>
+    </div>
+    <div class="menu-list-item">
+      <a
+        #regionsLink="routerLinkActive"
+        routerLinkActive
+        [ngClass]="regionsLink.isActive ? 'active' : ''"
+        routerLink="regions"
+        mat-list-item
+      >
+        <span>Regiones</span>
+      </a>
+    </div>
+    <div class="menu-list-item">
+      <a
+        #aboutUsLink="routerLinkActive"
+        routerLinkActive
+        [ngClass]="aboutUsLink.isActive ? 'active' : ''"
+        routerLink="about-us"
+        mat-list-item
+      >
+        <span>Quiénes somos</span>
+      </a>
+    </div>
+  </mat-nav-list>
+  <div class="nav-icons">
+    <button mat-icon-button type="button" (click)="onShoppingCart()">
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+
+    <button mat-icon-button type="button" (click)="onUserIcon()">
+      <mat-icon>person</mat-icon>
+    </button>
+
+    <div class="login-data" *ngIf="authUser$ | async">
+      <p id="login-user" (click)="onUserIcon()">
+        {{ authUser$ | async | fullNameUserLogin }}
+      </p>
+      <p id="logout" (click)="onLogOut()">Cerrar sesión</p>
+    </div>
+  </div>
+</nav>

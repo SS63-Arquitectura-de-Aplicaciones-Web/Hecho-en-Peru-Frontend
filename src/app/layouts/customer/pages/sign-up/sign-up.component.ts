@@ -20,18 +20,18 @@ export class SignUpComponent {
     private fb: FormBuilder,
     private customersService: CustomersService,
     private alertService: AlertService,
-    private router: Router,
+    private router: Router
   ) {
     this.signUpForm = this.fb.group({
       name: this.fb.control('', [
         Validators.required,
         Validators.minLength(2),
-        Validators.pattern('[a-zA-Z\\s]*'),
+        Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$')
       ]),
       lastName: this.fb.control('', [
         Validators.required,
         Validators.minLength(2),
-        Validators.pattern('[a-zA-Z\\s]*'),
+        Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$')
       ]),
       email: this.fb.control('', [Validators.required, Validators.email]),
       password: this.fb.control('', [

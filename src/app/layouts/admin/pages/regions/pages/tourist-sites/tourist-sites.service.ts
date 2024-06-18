@@ -49,7 +49,7 @@ export class TouristSitesService {
       finalize(() => this.loadingService.setIsLoading(false))
     );
   }
-  
+
   updateTouristSites(id: string, data: TouristSite, file: File) {
     this.loadingService.setIsLoading(true);
     const formData: FormData = new FormData();
@@ -66,7 +66,7 @@ export class TouristSitesService {
       finalize(() => this.loadingService.setIsLoading(false))
     );
   }
-  
+
   deleteTouristSiteByID(id: string) {
     this.loadingService.setIsLoading(true);
     return this.httpClient

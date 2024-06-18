@@ -1,12 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Customer } from '../../models/customer';
 import { OrderDetail } from './models/order-detail';
 import { CustomersService } from '../../customers.service';
+import { OrdersService } from './orders.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -49,11 +50,15 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
+  @ViewChild(FormGroupDirective)
+  private orderSearchFormDir!: FormGroupDirective;
+
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private customersService: CustomersService
+    private customersService: CustomersService,
+    private ordersService: OrdersService,
   ) {
     this.orderSearchForm = this.fb.group({
       id: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
@@ -73,10 +78,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
             this.loadOrdersByPage();
             this.searchAttempted = false;
           },
-          error: (err) => {
-            console.error(`Failed to load customer with ID ${customerId}`, err);
-            this.searchAttempted = true;
-            this.dataSourceCustomer.data = [];
+          error: () => {
+            this.router.navigate(['/404']);
           },
         });
       this.subscriptions.push(customerSubscription);
@@ -90,15 +93,12 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   loadOrders(customerId: string) {
-    const countSubscription = this.customersService
+    const countSubscription = this.ordersService
       .getAllOrderDetailsByUserIdAdmin(customerId)
       .subscribe({
         next: (orders) => {
           this.length = orders.length;
         },
-        error: (err) => {
-          console.error('Failed to load order count', err);
-        }
       });
       this.subscriptions.push(countSubscription);
   }
@@ -106,7 +106,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   loadOrdersByPage() {
     const customerId = this.customerSelected?.id;
     if (customerId) {
-      this.customersService
+      this.ordersService
         .getOrderDetailByUserIdByPageAdmin(
           customerId,
           this.pageIndex,
@@ -116,13 +116,10 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
           next: (orders) => {
             this.dataSourceOrder.data = orders;
           },
-          error: (err) => {
-            console.error('Failed to load orders by page', err);
+          error: () => {
             this.dataSourceOrder.data = [];
           },
         });
-    } else {
-      console.error('No customer selected');
     }
   }
 
@@ -142,16 +139,15 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     const orderId = this.orderSearchForm.value.id;
     const customerId = this.activatedRoute.snapshot.paramMap.get('id');
     if (customerId && orderId) {
-      const searchSubscription = this.customersService
+      const searchSubscription = this.ordersService
         .getSearchOrderDetailsById(orderId, customerId)
         .subscribe({
           next: (order) => {
+            this.searchAttempted = false;
             this.dataSourceOrder.data = order;
             this.length = order.length;
-            this.searchAttempted = false;
           },
-          error: (err) => {
-            console.error(`Failed to load order with ID ${orderId}`, err);
+          error: () => {
             this.dataSourceOrder.data = [];
             this.length = 0;
             this.searchAttempted = true;
@@ -162,10 +158,13 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   onClean(): void {
-    this.orderSearchForm.reset();
-    this.pageIndex = 0;
-    this.loadOrdersByPage();
     this.searchAttempted = false;
+    this.orderSearchFormDir.resetForm();
+    this.pageIndex = 0;
+    if (this.customerSelected) {
+      this.loadOrders(this.customerSelected.id);
+      this.loadOrdersByPage();
+    }
   }
 
   redirectToCustomers(): void {

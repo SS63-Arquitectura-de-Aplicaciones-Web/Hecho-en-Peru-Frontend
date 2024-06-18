@@ -52,5 +52,4 @@ export class HomeService {
       )
       .pipe(finalize(() => this.loadingService.setIsLoading(false)));
   }
-  
 }
