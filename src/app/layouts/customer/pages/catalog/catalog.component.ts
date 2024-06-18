@@ -203,21 +203,27 @@ export class CatalogComponent {
   }
 
   onFilterProducts() {
-
     this.filterActive = true;
-
     let temp = [];
 
     //Price filter
     let minPrice = this.filterForm.get('price')?.get('min')?.value;
     let maxPrice = this.filterForm.get('price')?.get('max')?.value;
-
     //OrderBy filter
     let selectedOrder = this.filterForm.get('order')?.value;
+    //Category filter
+    const selectedCategories = this.categories
+      .map((category, i) =>
+        this.filterForm.get('categories')?.value[i] ? category.id : null
+      )
+      .filter((id) => id !== null);
 
     temp = this.products.filter(
       (p) => p.price >= minPrice && p.price <= maxPrice
     );
+
+    if (selectedCategories.length)
+      temp = temp.filter((p) => selectedCategories.includes(p.category.id));
 
     switch (selectedOrder) {
       case 'PASC': {
@@ -251,6 +257,4 @@ export class CatalogComponent {
     });
     this.showProductsByPage();
   }
-
 }
-
