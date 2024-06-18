@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Product } from '../../../admin/pages/products/models/product';
-import { Subscription, map } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { ProductsService } from '../../../admin/pages/products/products.service';
 import { Category } from '../../../admin/pages/products/models/category';
@@ -11,6 +11,8 @@ import { Store } from '@ngrx/store';
 import { ShoppingCartAction } from '../../../../core/store/shopping-cart/shopping-cart.actions';
 import { OrderDetailRequest } from '../checkout/models/order-detail-request';
 import { ToastService } from '../../../../core/services/toast.service';
+import { environment } from '../../../../../environments/environment';
+import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({
   selector: 'app-catalog',
@@ -18,6 +20,8 @@ import { ToastService } from '../../../../core/services/toast.service';
   styleUrl: './catalog.component.scss',
 })
 export class CatalogComponent {
+  apiURL = environment.apiURL;
+
   length = 0;
   pageSize = 12;
   pageIndex = 0;
@@ -44,18 +48,19 @@ export class CatalogComponent {
     private router: Router,
     private productsService: ProductsService,
     private regionService: RegionsService,
+    private alertService: AlertService,
     private toastService: ToastService,
     private fb: FormBuilder,
-    private store: Store,
+    private store: Store
   ) {
     this.filterForm = this.fb.group({
       price: this.fb.group({
         min: this.fb.control(10),
-        max: this.fb.control(1500)
+        max: this.fb.control(1500),
       }),
       order: this.fb.control(''),
       categories: this.fb.array([]),
-      regions: this.fb.array([])
+      regions: this.fb.array([]),
     });
   }
 
@@ -65,9 +70,14 @@ export class CatalogComponent {
         next: (products) => {
           this.length = products.length;
           this.products = products;
-          if(!this.filterActive) this.filterProducts = this.products;
+          if (!this.filterActive) this.filterProducts = this.products;
           this.showProductsByPage();
         },
+        error: () =>
+          this.alertService.showError(
+            'Ups! Ocurrió un error',
+            'No se pudieron cargar los datos correctamente'
+          ),
       })
     );
 
@@ -76,6 +86,11 @@ export class CatalogComponent {
         next: (bestSellers) => {
           this.lengthBestSellers = bestSellers.length;
         },
+        error: () =>
+          this.alertService.showError(
+            'Ups! Ocurrió un error',
+            'No se pudieron cargar los datos correctamente'
+          ),
       })
     );
 
@@ -84,27 +99,38 @@ export class CatalogComponent {
     this.getRegiones();
   }
 
-  getBestSellersByPage(){
+  getBestSellersByPage() {
     this.subscriptions.push(
       this.productsService
-        .getBestSellingProductsByPageUser(this.pageIndexBestSellers, this.pageSizeBestSellers)
+        .getBestSellingProductsByPageUser(
+          this.pageIndexBestSellers,
+          this.pageSizeBestSellers
+        )
         .subscribe({
           next: (bestSellers) => {
             this.bestSellers = bestSellers;
           },
+          error: () =>
+            this.alertService.showError(
+              'Ups! Ocurrió un error',
+              'No se pudieron cargar los datos correctamente'
+            ),
         })
     );
   }
 
-  previousBestSellersPage(){
-    if(this.pageIndexBestSellers > 0){
+  previousBestSellersPage() {
+    if (this.pageIndexBestSellers > 0) {
       this.pageIndexBestSellers--;
       this.getBestSellersByPage();
     }
   }
 
-  nextBestSellersPage(){
-    if(this.pageIndexBestSellers < Math.ceil(this.lengthBestSellers / this.pageSizeBestSellers) - 1){
+  nextBestSellersPage() {
+    if (
+      this.pageIndexBestSellers <
+      Math.ceil(this.lengthBestSellers / this.pageSizeBestSellers) - 1
+    ) {
       this.pageIndexBestSellers++;
       this.getBestSellersByPage();
     }
@@ -126,31 +152,41 @@ export class CatalogComponent {
     this.regionsArray.push(new FormControl(false));
   }
 
-  getCategories(){
+  getCategories() {
     this.subscriptions.push(
       this.productsService.getCategories().subscribe({
         next: (categories) => {
           this.categories = categories;
           this.categoriesArray.clear();
           categories.forEach(() => this.addCategoryControl());
-        }
+        },
+        error: () =>
+          this.alertService.showError(
+            'Ups! Ocurrió un error',
+            'No se pudieron cargar los datos correctamente'
+          ),
       })
-    )
+    );
   }
 
-  getRegiones(){
+  getRegiones() {
     this.subscriptions.push(
       this.regionService.getRegions().subscribe({
         next: (regions) => {
           this.regions = regions;
           this.regionsArray.clear();
           regions.forEach(() => this.addRegionControl());
-        }
+        },
+        error: () =>
+          this.alertService.showError(
+            'Ups! Ocurrió un error',
+            'No se pudieron cargar los datos correctamente'
+          ),
       })
-    )
+    );
   }
 
-  showProductsByPage(){
+  showProductsByPage() {
     const starIndex = this.pageIndex * this.pageSize;
     const endIndex = starIndex + this.pageSize;
     this.productsByPage = this.filterProducts.slice(starIndex, endIndex);
@@ -172,7 +208,7 @@ export class CatalogComponent {
       this.pageIndex = this.inputPageNumber - 1;
       this.showProductsByPage();
     }
-    
+
     this.inputPageNumber = this.pageIndex + 1;
   }
 
@@ -188,24 +224,10 @@ export class CatalogComponent {
     this.router.navigate([`/shop/catalog/${id}`]);
   }
 
-  onAddProduct(product: Product){
-    const orderDetail: OrderDetailRequest = {
-      product,
-      quantity: 1
-    };
-    
-    this.store.dispatch(ShoppingCartAction.addProduct({orderDetail}));
-    this.toastService.showToast("Se añadió el producto al carrito");
-  }
-  
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((suscription) => suscription.unsubscribe());
-  }
-
   onFilterProducts() {
     this.filterActive = true;
-    let temp = [];
 
+    let temp = [];
     //Price filter
     let minPrice = this.filterForm.get('price')?.get('min')?.value;
     let maxPrice = this.filterForm.get('price')?.get('max')?.value;
@@ -220,8 +242,8 @@ export class CatalogComponent {
     //Region filter
     const selectedRegions = this.regions
       .map((region, i) =>
-      this.filterForm.get('regions')?.value[i] ? region.id : null
-    )
+        this.filterForm.get('regions')?.value[i] ? region.id : null
+      )
       .filter((id) => id !== null);
 
     temp = this.products.filter(
@@ -237,6 +259,10 @@ export class CatalogComponent {
       );
 
     switch (selectedOrder) {
+      case 'PDSC': {
+        temp.sort((a, b) => b.price - a.price);
+        break;
+      }
       case 'PASC': {
         temp.sort((a, b) => a.price - b.price);
         break;
@@ -246,7 +272,7 @@ export class CatalogComponent {
         break;
       }
     }
-    
+
     this.filterProducts = temp;
     this.length = this.filterProducts.length;
 
@@ -267,5 +293,19 @@ export class CatalogComponent {
       },
     });
     this.showProductsByPage();
+  }
+
+  onAddProduct(product: Product) {
+    const orderDetail: OrderDetailRequest = {
+      product,
+      quantity: 1,
+    };
+
+    this.store.dispatch(ShoppingCartAction.addProduct({ orderDetail }));
+    this.toastService.showToast('Se añadió el producto al carrito');
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((suscription) => suscription.unsubscribe());
   }
 }
