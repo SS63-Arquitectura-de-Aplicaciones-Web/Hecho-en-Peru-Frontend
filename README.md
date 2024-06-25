@@ -35,36 +35,34 @@ Hecho en Perú es una plataforma integral que permite la gestión completa de un
 ### Backend:
 
 1. Clona el repositorio del backend:
-    ```bash
-    git clone https://github.com/GonzaloPA23/HechoEnPeru.git
-    ```
+  ```bash
+  git clone https://github.com/GonzaloPA23/HechoEnPeru.git
+  ```
 2. Navega al directorio del proyecto:
-    ```bash
-    cd HechoEnPeru
-    ```
+  ```bash
+  cd HechoEnPeru
+  ```
 3. Instala las dependencias:
-    ```bash
-    mvn install
-    ```
+  ```bash
+  mvn install
+  ```
 4. Configura la base de datos PostgreSQL y actualiza las credenciales en el archivo `application.properties`.
 5. Ejecuta la aplicación Spring Boot
 
 ### Frontend:
 
 1. Clona el repositorio:
-    ```bash
-    git clone https://github.com/GwynethS/Hecho-en-Peru-Frontend.git
-    ```
+  ```bash
+  git clone https://github.com/GwynethS/Hecho-en-Peru-Frontend.git
+  ```
 2. Navega al directorio del proyecto:
-    ```bash
-    cd Hecho-en-Peru-Frontend
-    ```
+  ```bash
+  cd Hecho-en-Peru-Frontend
+  ```
 3. Instala las dependencias
-    ```bash
-    npm install
-    ```
-
-
+  ```bash
+  npm install
+  ```
 
 ## 👩🏻‍💻 Uso
 
